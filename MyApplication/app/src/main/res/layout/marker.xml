@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="230dp"
+    android:layout_height="170dp">
+
+    <ImageView
+        android:layout_width="230dp"
+        android:layout_height="170dp"
+        android:id="@+id/info_window"
+        android:src="@drawable/map_infowindow2x"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true"
+        android:text="Au croissant doré"
+        android:textSize="20dp"
+        android:textColor="@color/white"/>
+
+    <TextView
+        android:id="@+id/categ"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Restaurant"
+        android:layout_marginTop="50dp"
+        android:textSize="17dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="* * * * *"
+        android:textSize="18dp"
+        android:layout_marginTop="77dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white" />
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="112dp"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/map_infowindow_info2x"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/enSavoirPlus"
+        android:layout_centerHorizontal="true"
+        android:text="En savoir plus"
+        android:layout_marginTop="106dp"
+        android:textColor="@color/white"
+        android:textSize="18dp"
+        android:background="@null" />
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="112dp"
+        android:layout_marginLeft="205dp"
+        android:src="@drawable/fleche_droit_white"/>
+
+</RelativeLayout>

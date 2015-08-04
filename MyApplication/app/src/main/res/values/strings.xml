@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Find\'UTC</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="texte_avis">
+        Aucune information vous concernant ne sera visible.\n
+        Votre login UTC/ESCOM est toutefois nécessaire pour vérifier votre identité lors de la validation de votre avis.
+    </string>
+
+    <string name="api_key_name">Authorization-api-key</string>
+    <string name="api_key_value">4eQDpd30GEy20fbAOus5yBo642jfkMWW</string>
+
+    <string name="api_envoi">http://assos.utc.fr/findutc/api/opinions</string>
+    <string name="api_stores">https://assos.utc.fr/findutc/api/stores/</string>
+    <string name="api_categories">https://assos.utc.fr/findutc/api/categories/</string>
+    <string name="api_store_opinion">https://assos.utc.fr/findutc/api/opinions/?store=</string>
+
+    <string name="api_test_envoi">http://findutc.sylvainmarchienne.fr/api/opinions</string>
+    <string name="api_test_stores">http://findutc.sylvainmarchienne.fr/api/stores/</string>
+    <string name="api_test_categories">http://findutc.sylvainmarchienne.fr/api/categories/</string>
+    <string name="api_test_store_opinion">http://findutc.sylvainmarchienne.fr/api/opinions/?store=</string>
+
+    <string name="compiegne_lat">49.41781599999999</string>
+    <string name="compiegne_lng">2.826144999999997</string>
+</resources>

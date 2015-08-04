@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="@color/findUTC"
+        android:id="@+id/rlTitle">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:id="@+id/title"
+            android:text="Titre"
+            android:layout_centerHorizontal="true"
+            android:textSize="40dp"
+            android:textColor="@color/white"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="ButtonLeft"
+            android:id="@+id/buttonLeft"
+            android:visibility="gone"
+            android:textSize="17dp"
+            android:textColor="@color/white"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="12dp"
+            android:layout_centerInParent="true"
+            android:background="@color/findUTC"
+            style="?android:attr/borderlessButtonStyle"
+            android:fontFamily="Arial"
+            android:textAllCaps="false"/>   <!--for lower case-->
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:id="@+id/flecheGauche"
+            android:visibility="gone"
+            android:src="@drawable/fleche_gauche_white"
+            android:layout_centerInParent="true"
+            android:layout_alignParentLeft="true"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:visibility="gone"
+            android:text="ButtonRight"
+            android:id="@+id/buttonRight"
+            android:textSize="17dp"
+            android:textColor="@color/white"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:background="@color/findUTC"
+            style="?android:attr/borderlessButtonStyle"
+            android:fontFamily="Arial"
+            android:textAllCaps="false"/>   <!--for lower case-->
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:id="@+id/linearLayout">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_alignParentLeft="true">
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@null"
+                android:id="@+id/menu"/>
+
+            <ImageView android:id="@+id/imageMenu"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_menu_2x"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="1dp"
+                android:layout_centerHorizontal="true"/>
+
+            <TextView
+                android:id="@+id/textMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="Menu"
+                android:textSize="15dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/black"
+                android:alpha="0.5"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_alignParentLeft="true">
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@null"
+                android:id="@+id/rechercher"/>
+
+            <ImageView android:id="@+id/imageRechercher"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_rechercher_2x"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="2dp"
+                android:layout_centerHorizontal="true"/>
+
+            <TextView
+                android:id="@+id/textRechercher"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="Rechercher"
+                android:textSize="15dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/black"
+                android:alpha="0.5"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_alignParentLeft="true">
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@null"
+                android:id="@+id/carte"/>
+
+            <ImageView android:id="@+id/imageCarte"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_carte_2x"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="2dp"
+                android:layout_centerHorizontal="true"/>
+
+            <TextView
+                android:id="@+id/textCarte"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="Carte"
+                android:textSize="15dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/black"
+                android:alpha="0.5"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <!--Border line-->
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/fragment_container"
+        android:background="@color/findUTC"/>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fragment_container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignStart="@+id/rlTitle"
+        android:layout_alignLeft="@+id/rlTitle"
+        android:layout_alignRight="@+id/rlTitle"
+        android:layout_below="@+id/rlTitle"
+        android:layout_above="@+id/linearLayout"/>
+
+
+</RelativeLayout>
