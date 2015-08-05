@@ -29,9 +29,9 @@ public class AsyncHttpGet extends AsyncTask<String, String, String> {
         try {
             URL url = new URL(serverUrl[0]);    // ici, serverURL[0] est l'URL de connexion
             HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-            urlConn.setConnectTimeout(3000);  //set timeout to 3 seconds
             //envoi de la clé dans le Header
             urlConn.setRequestProperty(mContext.getResources().getString(R.string.api_key_name), mContext.getResources().getString(R.string.api_key_value));
+            urlConn.setConnectTimeout(3000);  //set timeout to 3 seconds
             urlConn.connect();
             int responseCode = urlConn.getResponseCode();
             if (responseCode == 200) {

@@ -4,7 +4,13 @@ package com.example.baptisteamato.findutc;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -39,6 +45,7 @@ public class CarteFragment extends Fragment{
     String categories[];
     private GoogleMap map;
     boolean fromFiche;
+    List<String> listItems;
 
     public CarteFragment() {
     }
@@ -87,19 +94,46 @@ public class CarteFragment extends Fragment{
                 public void onClick(View v) {
 
                     //création de la liste des catégories
-                    List<String> listItems = new ArrayList<String>();
-                    listItems.add("Tous");
-                    categories = new String[20];
-                    int j = services.getCategories(categories);
-                    if (j == 0)
-                        Toast.makeText(getActivity(), "Impossible de charger les catégories. Veuillez vérifier votre connexion.", Toast.LENGTH_LONG).show();
-                    else {
-                        for (int i = 0; i < j; i++) {
-                            if (categories[i] != null) {
-                                listItems.add(categories[i]);
-                            }
-                        }
+                    listItems = ((App) getActivity().getApplication()).getListItems();
+                    if (listItems == null) { //si c'est la première fois qu'on accède à cette page, on crée la liste
 
+                        listItems = new ArrayList<String>();
+                        listItems.add("Tous");
+                        categories = new String[20];
+                        int j = services.getCategories(categories);
+                        if (j == 0)
+                            Toast.makeText(getActivity(), "Impossible de charger les catégories. Veuillez vérifier votre connexion.", Toast.LENGTH_LONG).show();
+                        else {
+                            for (int i = 0; i < j; i++) {
+                                if (categories[i] != null) {
+                                    listItems.add(categories[i]);
+                                }
+                            }
+
+                            //Création de l'AlertDialog affichant la liste des catégories
+                            final CharSequence[] items = listItems.toArray(new CharSequence[listItems.size()]);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle("Quels établissements afficher ?");
+                            builder.setItems(items, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int item) {
+                                    choix.setText(items[item]);
+                                    //on modifie les markers de GoogleMaps
+                                    //-------------------------Rencentrage de la caméra---------------------------
+                                    double compiegne_lat = Double.parseDouble(getActivity().getResources().getString(R.string.compiegne_lat));
+                                    double compiegne_lng = Double.parseDouble(getActivity().getResources().getString(R.string.compiegne_lng));
+                                    LatLng compiegne = new LatLng(compiegne_lat, compiegne_lng);
+                                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(compiegne, 14.0f));
+                                    //------------------------------------------------------------------------------
+                                    addMarkers(getActivity(), map, items[item].toString());
+                                }
+                            });
+
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        }
+                        ((App) getActivity().getApplication()).setListItems(listItems);
+                    }
+                    else {
                         //Création de l'AlertDialog affichant la liste des catégories
                         final CharSequence[] items = listItems.toArray(new CharSequence[listItems.size()]);
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -147,7 +181,7 @@ public class CarteFragment extends Fragment{
                     Marker marker = map.addMarker(new MarkerOptions()
                             .title(name)
                             .snippet(nameCategory)
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_maps))
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                             .position(coord));
                     marker.showInfoWindow();
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(coord, 14.0f));
@@ -263,7 +297,7 @@ public class CarteFragment extends Fragment{
                     map.addMarker(new MarkerOptions()
                             .title(stores[i])       //stores[i] : name
                             .snippet(infos[i][5] + "." + infos[i][0])  // infos[i][5] : nameCategory, infos[i][0] : rating
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_maps))
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                             .position(new LatLng(Double.parseDouble(infos[i][6]), Double.parseDouble(infos[i][7]))));
 
                     /*------------Création de l'infowindow---------*/

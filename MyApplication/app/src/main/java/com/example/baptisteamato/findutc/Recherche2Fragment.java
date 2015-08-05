@@ -18,12 +18,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.example.baptisteamato.findutc.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 
@@ -38,7 +41,7 @@ public class Recherche2Fragment extends Fragment{
     int nbStores;
     String nameCategory;
     Button retour_rechercher;
-
+    TextView chargement;
 
     public Recherche2Fragment() {
     }
@@ -64,143 +67,168 @@ public class Recherche2Fragment extends Fragment{
 
         View view = inflater.inflate(R.layout.fragment_recherche2, container, false);
 
+        editSearch = (EditText) view.findViewById(R.id.editSearch);
 
-        /*----------------Création d'une ListView-----------------------*/
         etabList = (ListView) view.findViewById(R.id.listviewRecherche);
-        etabListItem = new ArrayList<HashMap<String, String>>();
 
-        /*-----------------Récupération des stores--------------------------*/
-        nbStores = services.getNbStores(nameCategory);
-        String infosStore[][] = new String[nbStores][8];
-        String stores[] = services.getStoresCategorie(nameCategory, infosStore, nbStores);
+        chargement = (TextView) getActivity().findViewById(R.id.chargement);
+        chargement.setVisibility(View.VISIBLE);
+
+        //on charge la liste APRES que le fragment soit affiché
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                /*----------------Création d'une ListView-----------------------*/
+                etabListItem = new ArrayList<HashMap<String, String>>();
+
+                /*-----------------Récupération des stores--------------------------*/
+                nbStores = services.getNbStores(nameCategory);
+                String infosStore[][] = new String[nbStores][8];
+                String stores[] = services.getStoresCategorie(nameCategory, infosStore, nbStores);
 
         /*-----------------Ajout des stores dans la liste-------------------*/
-        for(int i=0; i < nbStores; i++){
-            map = new HashMap<String, String>();
-            if (stores[i].length() >= 25)   //Si le nom de l'établissement est trop long, on tronque et on ajoute "..."
-                map.put("name", stores[i].substring(0,15) + "...");
-            else
-                map.put("name", stores[i]);
-            if (infosStore[i][0].equals("Pas encore d'avis"))
-                map.put("rating", "Non noté");
-            else
-                map.put("rating", infosStore[i][0] + "/5");
-            map.put("nbAvis", "(" + infosStore[i][2] + " avis)");
-            map.put("idStore", infosStore[i][1]);   //non affiché, permet d'être récupéré pour la prochaine page
-            etabListItem.add(map);
-        }
-
-        /*------------------------Fin création ListView---------------------------*/
-        SimpleAdapter mSchedule;
-
-        //on cherche la résolution de l'écran, pour adapter la vue
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-
-        if (width < 530)
-            mSchedule = new SimpleAdapter (getActivity(), etabListItem, R.layout.rowlayoutsmall2,
-                    new String[] {"name", "rating", "nbAvis"}, new int[] {R.id.name, R.id.rating, R.id.nbAvis});
-        else
-            mSchedule = new SimpleAdapter (getActivity(), etabListItem, R.layout.rowlayout2,
-                    new String[] {"name", "rating", "nbAvis"}, new int[] {R.id.name, R.id.rating, R.id.nbAvis});
-
-        etabList.setAdapter(mSchedule);
-
-        /*------------------Buttons Listeners--------------------*/
-        etabList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                if (services.connectionActivee()) {
-
-                    //on récupère la HashMap contenant les infos de notre item (titre, img)
-                    HashMap<String, String> map = (HashMap<String, String>) etabList.getItemAtPosition(position);
-
-                    Bundle bundle = new Bundle();
-                    bundle.putString("idStore", map.get("idStore"));
-                    bundle.putBoolean("fromListe", true);
-                    bundle.putString("previousCategory", nameCategory);//nom de la catégorie d'où l'on vient
-                    bundle.putString("previousCategoryPlural", previousCategoryPlural); //pluriel (pour le prochain boutton retour)
-
-                    Fragment ficheEtab = new FicheEtabFragment();
-                    ficheEtab.setArguments(bundle);
-                    final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    ft.replace(R.id.fragment_container, ficheEtab, "FicheEtabFragment");
-                    ft.commit();
-                } else {
-                    PageAccueilFragment newFragment = new PageAccueilFragment();
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, newFragment);
-                    transaction.commit();
+                for(int i=0; i < nbStores; i++){
+                    map = new HashMap<String, String>();
+                    if (stores[i].length() >= 25)   //Si le nom de l'établissement est trop long, on tronque et on ajoute "..."
+                        map.put("name", stores[i].substring(0,15) + "...");
+                    else
+                        map.put("name", stores[i]);
+                    if (infosStore[i][0].equals("Pas encore d'avis")) {
+                        map.put("rating", "");
+                        map.put("nbAvis", "Non noté");
+                    }
+                    else {
+                        map.put("rating", infosStore[i][0] + "/5");
+                        map.put("nbAvis", "(" + infosStore[i][2] + " avis)");
+                    }
+                    map.put("idStore", infosStore[i][1]);   //non affiché, permet d'être récupéré pour la prochaine page
+                    etabListItem.add(map);
                 }
-            }
-        });
 
-        retour_rechercher.setOnClickListener(new View.OnClickListener() {
+                /*------------------------Fin création ListView---------------------------*/
 
-            @Override
-            public void onClick(View v) {
+                //on trie par ordre alphabétique
+                Collections.sort(etabListItem, new Comparator<HashMap<String, String>>() {
+                    public int compare(HashMap<String, String> mapping1, HashMap<String, String> mapping2) {
+                        return mapping1.get("name").compareTo(mapping2.get("name"));
+                    }
+                });
 
-                container.removeAllViews();
-                final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_container, new RechercheFragment(), "RechercheFragment");
-                ft.commit();
-            }
-        });
+                SimpleAdapter mSchedule;
 
-        editSearch = (EditText) view.findViewById(R.id.editSearch);
-        editSearch.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                editSearch.requestFocusFromTouch();
-                return false;
-            }
-        });
+                //on cherche la résolution de l'écran, pour adapter la vue
+                Display display = getActivity().getWindowManager().getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                int width = size.x;
+
+                if (width < 530)
+                    mSchedule = new SimpleAdapter (getActivity(), etabListItem, R.layout.rowlayoutsmall2,
+                            new String[] {"name", "rating", "nbAvis"}, new int[] {R.id.name, R.id.rating, R.id.nbAvis});
+                else
+                    mSchedule = new SimpleAdapter (getActivity(), etabListItem, R.layout.rowlayout2,
+                            new String[] {"name", "rating", "nbAvis"}, new int[] {R.id.name, R.id.rating, R.id.nbAvis});
+
+                etabList.setAdapter(mSchedule);
+
+                /*------------------Buttons Listeners--------------------*/
+                etabList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                        if (services.connectionActivee()) {
+
+                            //on récupère la HashMap contenant les infos de notre item (titre, img)
+                            HashMap<String, String> map = (HashMap<String, String>) etabList.getItemAtPosition(position);
+
+                            Bundle bundle = new Bundle();
+                            bundle.putString("idStore", map.get("idStore"));
+                            bundle.putBoolean("fromListe", true);
+                            bundle.putString("previousCategory", nameCategory);//nom de la catégorie d'où l'on vient
+                            bundle.putString("previousCategoryPlural", previousCategoryPlural); //pluriel (pour le prochain boutton retour)
+
+                            Fragment ficheEtab = new FicheEtabFragment();
+                            ficheEtab.setArguments(bundle);
+                            final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                            ft.replace(R.id.fragment_container, ficheEtab, "FicheEtabFragment");
+                            ft.commit();
+                        } else {
+                            PageAccueilFragment newFragment = new PageAccueilFragment();
+                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                            transaction.replace(R.id.fragment_container, newFragment);
+                            transaction.commit();
+                        }
+                    }
+                });
+
+                retour_rechercher.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+
+                        container.removeAllViews();
+                        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.replace(R.id.fragment_container, new RechercheFragment(), "RechercheFragment");
+                        ft.commit();
+                    }
+                });
+
+                editSearch.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        editSearch.requestFocusFromTouch();
+                        return false;
+                    }
+                });
 
 
 
-        editSearch.addTextChangedListener(new TextWatcher() {   //Barre de recherche
-            //principe : dès que l'on écrit quelque chose, on récupère la liste entière et on enlève ce qui ne correspond pas
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                editSearch.addTextChangedListener(new TextWatcher() {   //Barre de recherche
+                    //principe : dès que l'on écrit quelque chose, on récupère la liste entière et on enlève ce qui ne correspond pas
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                ecrit = true;
-                String txt = editSearch.getText().toString();
-                ArrayList<HashMap<String, String>> temp = new ArrayList<HashMap<String, String>>(etabListItem); //copie, mais pas pointeur
-                int length = txt.length();
-                if (length == 0) {  //on affiche tout
-                    SimpleAdapter mSchedule = new SimpleAdapter(getActivity(), etabListItem, R.layout.rowlayout2,
-                            new String[]{"name", "rating", "nbAvis"}, new int[]{R.id.name, R.id.rating, R.id.nbAvis});
-                    etabList.setAdapter(mSchedule);
-                } else {    //on enlève les "mauvais" items
-                    int nbElements = nbStores;
-                    for (int i = 0; i < nbElements; i++) {  //on regarde si ce qui est écrit est contenu dans chaque item
-                        if (!temp.get(i).get("name").toString().toLowerCase().contains(txt.toLowerCase())) {
-                            temp.remove(i);
-                            //on enlève un élément, donc on doit rester sur le même indice dans la liste et décrémenter nbElements
-                            i--;
-                            nbElements--;
+                        ecrit = true;
+                        String txt = editSearch.getText().toString();
+                        ArrayList<HashMap<String, String>> temp = new ArrayList<HashMap<String, String>>(etabListItem); //copie, mais pas pointeur
+                        int length = txt.length();
+                        if (length == 0) {  //on affiche tout
+                            SimpleAdapter mSchedule = new SimpleAdapter(getActivity(), etabListItem, R.layout.rowlayout2,
+                                    new String[]{"name", "rating", "nbAvis"}, new int[]{R.id.name, R.id.rating, R.id.nbAvis});
+                            etabList.setAdapter(mSchedule);
+                        } else {    //on enlève les "mauvais" items
+                            int nbElements = nbStores;
+                            for (int i = 0; i < nbElements; i++) {  //on regarde si ce qui est écrit est contenu dans chaque item
+                                if (!temp.get(i).get("name").toString().toLowerCase().contains(txt.toLowerCase())) {
+                                    temp.remove(i);
+                                    //on enlève un élément, donc on doit rester sur le même indice dans la liste et décrémenter nbElements
+                                    i--;
+                                    nbElements--;
+                                }
+                            }
+
+                            SimpleAdapter mSchedule = new SimpleAdapter(getActivity(), temp, R.layout.rowlayout2,
+                                    new String[]{"name", "rating", "nbAvis"}, new int[]{R.id.name, R.id.rating, R.id.nbAvis});
+                            etabList.setAdapter(mSchedule);
                         }
                     }
 
-                    SimpleAdapter mSchedule = new SimpleAdapter(getActivity(), temp, R.layout.rowlayout2,
-                            new String[]{"name", "rating", "nbAvis"}, new int[]{R.id.name, R.id.rating, R.id.nbAvis});
-                    etabList.setAdapter(mSchedule);
-                }
-            }
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        // TODO Auto-generated method stub
+                    }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub
-            }
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        // TODO Auto-generated method stub
+                    }
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // TODO Auto-generated method stub
-            }
+                });
 
-        });
+                chargement.setVisibility(View.GONE);
+
+
+            }
+            });
 
         return view;
     }

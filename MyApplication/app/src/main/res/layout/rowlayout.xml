@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="fill_parent"
-    android:layout_height="50dp">
+    android:layout_height="60dp">
 
     <ImageView
         android:id="@+id/img"
@@ -24,8 +24,7 @@
             android:layout_height="fill_parent"
             android:gravity="center_vertical"
             android:text="Categorie"
-            android:textSize="22dp"
-            android:textStyle="bold" />
+            android:textSize="23dp" />
 
         <TextView android:id="@+id/nbStores"
             android:layout_width="wrap_content"
@@ -33,8 +32,7 @@
             android:gravity="center_vertical"
             android:text="(127)"
             android:layout_marginLeft="10dp"
-            android:textSize="22dp"
-            android:textStyle="bold" />
+            android:textSize="22dp" />
 
 
     </LinearLayout>

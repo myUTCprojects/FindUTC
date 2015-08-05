@@ -176,10 +176,10 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="0.5dp"
-        android:layout_below="@+id/fragment_container"
+        android:layout_below="@+id/rlFrag"
         android:background="@color/findUTC"/>
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/fragment_container"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -187,7 +187,34 @@
         android:layout_alignLeft="@+id/rlTitle"
         android:layout_alignRight="@+id/rlTitle"
         android:layout_below="@+id/rlTitle"
-        android:layout_above="@+id/linearLayout"/>
+        android:layout_above="@+id/linearLayout"/>-->
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/rlFrag"
+        android:layout_alignStart="@+id/rlTitle"
+        android:layout_alignLeft="@+id/rlTitle"
+        android:layout_alignRight="@+id/rlTitle"
+        android:layout_below="@+id/rlTitle"
+        android:layout_above="@+id/linearLayout">
+
+        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/fragment_container"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Chargement ..."
+            android:textSize="20dp"
+            android:textColor="@color/findUTC"
+            android:visibility="gone"
+            android:id="@+id/chargement"/>
+
+    </RelativeLayout>
 
 
 </RelativeLayout>

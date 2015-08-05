@@ -161,6 +161,8 @@ public class FicheEtabFragment extends Fragment{
             TextPhone.setText(phone);
         if (!hours.equals(""))
             TextHoraires.setText(hours);
+        else
+            ((LinearLayout) view.findViewById(R.id.llHours)).setVisibility(View.GONE);
         if (!description.equals(""))
             TextDescription.setText(description);
 
