@@ -9,8 +9,8 @@ android {
         applicationId "com.baptisteamato.myapplication"
         minSdkVersion 13
         targetSdkVersion 22
-        versionCode 4
-        versionName "1.0.c"
+        versionCode 5
+        versionName "1.0.d"
     }
     buildTypes {
         release {

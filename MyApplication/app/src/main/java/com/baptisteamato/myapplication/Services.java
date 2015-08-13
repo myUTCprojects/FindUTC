@@ -219,7 +219,7 @@ public class Services extends FragmentActivity{
 
     //renvoi de l'ID du dernier avis affiché (pour savoir à partir du quel rechercher en cliquant sur "Plus d'avis")
     //date et commentary sont vides en entrées, et contiennent respectivement la date et le commentaire de chaque avis en sortie
-    public String getAvis(String idStore, String lastId, String date[], String commentary[]) {
+    public String getAvis(String idStore, String lastId, String date[], String note[], String commentary[]) {
         String idLastOpinion = "";
         String serverURL = mContext.getResources().getString(R.string.api_store_opinion);
         serverURL += idStore;
@@ -236,6 +236,7 @@ public class Services extends FragmentActivity{
                     JSONObject jsonObject = data.getJSONObject(i);
 
                     date[i] = jsonObject.optString("date").toString();
+                    note[i] = jsonObject.optString("rating").toString();
                     commentary[i] = jsonObject.optString("commentary").toString();
                     idLastOpinion =  jsonObject.optString("idOpinion").toString();
                 }

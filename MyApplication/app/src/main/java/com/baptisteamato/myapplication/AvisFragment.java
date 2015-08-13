@@ -107,9 +107,10 @@ public class AvisFragment extends Fragment{
 
         /*-----------------Récupération des avis--------------------------*/
         String date[] = new String[nbAvis];
+        String note[] = new String[nbAvis];
         String commentary[] = new String[nbAvis];
         String lastId = getArguments().getString("lastId");
-        idLastOpinion = services.getAvis(idStore, lastId, date, commentary);
+        idLastOpinion = services.getAvis(idStore, lastId, date, note, commentary);
         if (idLastOpinion == null) {
             Toast.makeText(getActivity(), "Plus d'avis disponible.", Toast.LENGTH_LONG).show();
             buttonPlusAvis.setVisibility(View.GONE);
@@ -121,6 +122,7 @@ public class AvisFragment extends Fragment{
                 if (date[i] != null) {  //pour ne pas afficher des rows vides
                     map = new HashMap<String, String>();
                     map.put("date", date[i]);
+                    map.put("note", services.getRating(note[i]));
                     map.put("commentary", commentary[i]);
                     avisListItem.add(map);
                 }
@@ -131,10 +133,10 @@ public class AvisFragment extends Fragment{
 
             if (screenInches > 6)   //tablette
                 mSchedule = new SimpleAdapter(getActivity(), avisListItem, R.layout.rowlayoutlarge_avis,
-                    new String[]{"date", "commentary"}, new int[]{R.id.date, R.id.commentary});
+                    new String[]{"date", "note", "commentary"}, new int[]{R.id.date, R.id.note, R.id.commentary});
             else    //smartphone
                 mSchedule = new SimpleAdapter(getActivity(), avisListItem, R.layout.rowlayout_avis,
-                        new String[]{"date", "commentary"}, new int[]{R.id.date, R.id.commentary});
+                        new String[]{"date", "note", "commentary"}, new int[]{R.id.date, R.id.note, R.id.commentary});
 
 
             avisList.setAdapter(mSchedule);
