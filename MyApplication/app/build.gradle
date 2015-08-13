@@ -6,11 +6,11 @@ android {
     compileOptions.encoding = 'windows-1252'
 
     defaultConfig {
-        applicationId "com.example.baptisteamato.myapplication"
+        applicationId "com.baptisteamato.myapplication"
         minSdkVersion 13
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "1.0.c"
     }
     buildTypes {
         release {

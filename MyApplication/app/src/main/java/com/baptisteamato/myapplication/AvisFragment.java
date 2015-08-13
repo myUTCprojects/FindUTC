@@ -1,10 +1,12 @@
-package com.example.baptisteamato.findutc;
+package com.baptisteamato.myapplication;
 
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -17,7 +19,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.baptisteamato.findutc.R;
+import com.baptisteamato.myapplication.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +37,6 @@ public class AvisFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         services = new Services(getActivity());
 
         buttonRetour = (Button) getActivity().findViewById(R.id.buttonLeft);
@@ -58,10 +59,27 @@ public class AvisFragment extends Fragment{
 
         View view;
 
-        if (height < 950)
+        /*------------*/
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int w=dm.widthPixels;
+        int h=dm.heightPixels;
+        int dens=dm.densityDpi;
+        double wi=(double)w/(double)dens;
+        double hi=(double)h/(double)dens;
+        double x = Math.pow(wi,2);
+        double y = Math.pow(hi,2);
+        double screenInches = Math.sqrt(x+y);
+        /*------------------*/
+
+        if (screenInches <= 5)
             view = inflater.inflate(R.layout.fragment_small_avis, container, false);
-        else
-            view = inflater.inflate(R.layout.fragment_avis, container, false);
+        else {
+            if (screenInches <= 6)
+                view = inflater.inflate(R.layout.fragment_avis, container, false);
+            else
+                view = inflater.inflate(R.layout.fragment_large_avis, container, false);
+        }
 
 
         /*---------------------find Views------------------*/
@@ -109,8 +127,16 @@ public class AvisFragment extends Fragment{
             }
 
         /*------------------------Fin création ListView---------------------------*/
-            SimpleAdapter mSchedule = new SimpleAdapter(getActivity(), avisListItem, R.layout.rowlayout_avis,
+            SimpleAdapter mSchedule;
+
+            if (screenInches > 6)   //tablette
+                mSchedule = new SimpleAdapter(getActivity(), avisListItem, R.layout.rowlayoutlarge_avis,
                     new String[]{"date", "commentary"}, new int[]{R.id.date, R.id.commentary});
+            else    //smartphone
+                mSchedule = new SimpleAdapter(getActivity(), avisListItem, R.layout.rowlayout_avis,
+                        new String[]{"date", "commentary"}, new int[]{R.id.date, R.id.commentary});
+
+
             avisList.setAdapter(mSchedule);
 
         }

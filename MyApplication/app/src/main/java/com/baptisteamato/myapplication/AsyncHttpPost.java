@@ -1,19 +1,26 @@
-package com.example.baptisteamato.findutc;
+package com.baptisteamato.myapplication;
 
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
-import com.example.baptisteamato.findutc.R;
+import com.baptisteamato.myapplication.R;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +37,13 @@ public class AsyncHttpPost extends AsyncTask<String,Void,Integer> {
 
         // Create a new HttpClient and Post Header
         String url = mContext.getResources().getString(R.string.api_envoi);
-        HttpClient httpclient = new DefaultHttpClient();
+        //set connection timeout to 3 seconds
+        HttpParams httpParameters = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
+        HttpConnectionParams.setSoTimeout(httpParameters, 3000);
+        //add parameter
+        HttpClient httpclient = new DefaultHttpClient(httpParameters);
+
         HttpPost httppost = new HttpPost(url);
 
         int responseCode = 500;
@@ -49,6 +62,8 @@ public class AsyncHttpPost extends AsyncTask<String,Void,Integer> {
             HttpResponse httpResponse = httpclient.execute(httppost);
             responseCode = httpResponse.getStatusLine().getStatusCode();
 
+        } catch (ConnectTimeoutException e) {
+            return 0;
         } catch (Exception e) {
             e.printStackTrace();
             return 500;

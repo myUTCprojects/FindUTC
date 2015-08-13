@@ -1,4 +1,4 @@
-package com.example.baptisteamato.findutc;
+package com.baptisteamato.myapplication;
 
 
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.FragmentActivity;
 
-import com.example.baptisteamato.findutc.R;
+import com.baptisteamato.myapplication.R;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -72,7 +72,7 @@ public class Services extends FragmentActivity{
         String jsonStr = getData(serverURL);
         int j = 0;  //nbCategories
         if (jsonStr != null) {
-                try {
+            try {
                     JSONObject jsonObj = new JSONObject(jsonStr);
                     JSONArray data = jsonObj.getJSONArray("data");
                     for (int i = 0; i < data.length(); i++) {

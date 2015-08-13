@@ -1,11 +1,13 @@
-package com.example.baptisteamato.findutc;
+package com.baptisteamato.myapplication;
 
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -18,7 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.baptisteamato.findutc.R;
+import com.baptisteamato.myapplication.R;
 
 public class AddCommentFragment extends Fragment {
 
@@ -33,7 +35,6 @@ public class AddCommentFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         services = new Services(getActivity());
 
         /*---------------------------------*/
@@ -57,8 +58,28 @@ public class AddCommentFragment extends Fragment {
         ((LinearLayout) getActivity().findViewById(R.id.linearLayout)).setVisibility(View.GONE);
         /*-----------------------------------*/
 
+        /*------------*/
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int w=dm.widthPixels;
+        int h=dm.heightPixels;
+        int dens=dm.densityDpi;
+        double wi=(double)w/(double)dens;
+        double hi=(double)h/(double)dens;
+        double x = Math.pow(wi,2);
+        double y = Math.pow(hi,2);
+        final double screenInches = Math.sqrt(x+y);
+        /*------------------*/
 
-        View view = inflater.inflate(R.layout.fragment_addcomment, container, false);
+        View view;
+
+        if (screenInches > 6) {
+            envoyer.setTextSize(23);
+            annuler.setTextSize(23);
+            view = inflater.inflate(R.layout.fragment_large_addcomment, container, false);
+        }
+        else
+            view = inflater.inflate(R.layout.fragment_addcomment, container, false);
 
         /*---------------------find Views------------------*/
 
@@ -98,7 +119,10 @@ public class AddCommentFragment extends Fragment {
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         avis.setText(items[item]);
-                        avis.setTextSize(25);
+                        if (screenInches > 6)
+                            avis.setTextSize(35);
+                        else
+                            avis.setTextSize(25);
                         avis.setTextColor(getResources().getColor(R.color.findUTC));
                     }
                 });
@@ -149,7 +173,7 @@ public class AddCommentFragment extends Fragment {
                         try {
                             code = envoi.get();
                         } catch (Exception e) {
-                            //TODO
+                            code = 0;
                         }
 
                         switch (code) {
@@ -168,6 +192,8 @@ public class AddCommentFragment extends Fragment {
                             case 500:
                                 Toast.makeText(getActivity(), "Erreur interne. Impossible d'envoyer l'avis.", Toast.LENGTH_SHORT).show();
                                 break;
+                            case 0:
+                                Toast.makeText(getActivity(), "Temps de connection trop long. Veuillez réessayer plus tard.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

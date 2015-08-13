@@ -19,25 +19,25 @@
 
             <TextView
                 android:layout_width="fill_parent"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:id="@+id/name"
-                android:textSize="30dp"
+                android:textSize="40dp"
                 android:textColor="@color/white"
                 android:gravity="center_horizontal"/>
 
             <TextView
                 android:layout_width="fill_parent"
-                android:layout_height="20dp"
+                android:layout_height="30dp"
                 android:id="@+id/nameCategory"
-                android:textSize="15dp"
+                android:textSize="25dp"
                 android:textColor="@color/white"
                 android:gravity="center_horizontal"/>
 
             <TextView
                 android:layout_width="fill_parent"
-                android:layout_height="20dp"
+                android:layout_height="30dp"
                 android:id="@+id/rating"
-                android:textSize="15dp"
+                android:textSize="23dp"
                 android:textColor="@color/white"
                 android:gravity="center_horizontal"/>
 
@@ -51,14 +51,14 @@
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="40dp"
+                android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:paddingLeft="20dp">
 
                 <ImageView
                     android:id="@+id/ic_adresse"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_adresse" />
 
@@ -68,21 +68,21 @@
                     android:gravity="center_vertical"
                     android:id="@+id/textAdresse"
                     android:text="Pas d'adresse disponible."
-                    android:textSize="15dp"
+                    android:textSize="25dp"
                     android:paddingLeft="10dp"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="40dp"
+                android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:paddingLeft="20dp">
 
                 <ImageView
                     android:id="@+id/ic_phone"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_phone" />
 
@@ -92,22 +92,22 @@
                     android:gravity="center_vertical"
                     android:id="@+id/textPhone"
                     android:text="Pas de numéro de téléphone disponible."
-                    android:textSize="15dp"
+                    android:textSize="25dp"
                     android:paddingLeft="10dp"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="40dp"
+                android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:id="@+id/llHours"
                 android:paddingLeft="20dp">
 
                 <ImageView
                     android:id="@+id/ic_horaires"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_horaires" />
 
@@ -117,7 +117,7 @@
                     android:gravity="center_vertical"
                     android:id="@+id/textHoraires"
                     android:text="Pas d'horaires disponibles."
-                    android:textSize="15dp"
+                    android:textSize="25dp"
                     android:paddingLeft="10dp"/>
 
             </LinearLayout>
@@ -126,9 +126,9 @@
 
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:text="Description"
-            android:textSize="20dp"
+            android:textSize="30dp"
             android:textColor="@color/white"
             android:background="@color/findUTC"
             android:gravity="center_vertical|center_horizontal"/>
@@ -139,41 +139,43 @@
             android:gravity="center_horizontal|center_vertical"
             android:id="@+id/textDescription"
             android:text="Pas de description disponible"
-            android:textSize="15dp"/>
+            android:layout_marginTop="20dp"
+            android:textSize="25dp"/>
 
         <Button
-            android:layout_width="300dp"
-            android:layout_height="40dp"
+            android:layout_width="500dp"
+            android:layout_height="60dp"
             android:text="Voir les avis"
             android:id="@+id/voir_avis"
-            android:textSize="17dp"
+            android:textSize="30dp"
             android:textColor="@color/white"
             android:background="@color/findUTC"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
             android:textAllCaps="false"/>
 
         <Button
-            android:layout_width="300dp"
-            android:layout_height="40dp"
+            android:layout_width="500dp"
+            android:layout_height="60dp"
             android:text="Rédiger un avis"
             android:id="@+id/rediger_avis"
-            android:textSize="17dp"
+            android:textSize="30dp"
             android:textColor="@color/white"
             android:background="@color/findUTC"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="40dp"
             android:textAllCaps="false"/>
 
         <Button
-            android:layout_width="300dp"
-            android:layout_height="40dp"
+            android:layout_width="500dp"
+            android:layout_height="60dp"
             android:text="Voir sur la carte"
             android:id="@+id/voir_carte"
-            android:textSize="17dp"
+            android:textSize="30dp"
             android:textColor="@color/white"
             android:background="@color/findUTC"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="40dp"
             android:textAllCaps="false"/>
 
     </LinearLayout>

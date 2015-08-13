@@ -1,5 +1,6 @@
-package com.example.baptisteamato.findutc;
+package com.baptisteamato.myapplication;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.baptisteamato.findutc.R;
+import com.baptisteamato.myapplication.R;
 
 
 public class PageAccueilFragment extends Fragment {     //page de retour s'il y a un problème de connexion
@@ -17,7 +18,6 @@ public class PageAccueilFragment extends Fragment {     //page de retour s'il y 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         container.removeAllViews();
 
         services = new Services(getActivity());

@@ -1,12 +1,14 @@
-package com.example.baptisteamato.findutc;
+package com.baptisteamato.myapplication;
 
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -18,11 +20,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import com.example.baptisteamato.findutc.R;
+import com.baptisteamato.myapplication.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +49,6 @@ public class Recherche2Fragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-
         services = new Services(getActivity());
 
         retour_rechercher = (Button) getActivity().findViewById(R.id.buttonLeft);
@@ -67,7 +67,24 @@ public class Recherche2Fragment extends Fragment{
 
         View view = inflater.inflate(R.layout.fragment_recherche2, container, false);
 
+        /*------------*/
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int w=dm.widthPixels;
+        int h=dm.heightPixels;
+        int dens=dm.densityDpi;
+        double wi=(double)w/(double)dens;
+        double hi=(double)h/(double)dens;
+        double x = Math.pow(wi, 2);
+        double y = Math.pow(hi,2);
+        final double screenInches = Math.sqrt(x+y);
+        /*------------------*/
+
         editSearch = (EditText) view.findViewById(R.id.editSearch);
+        if (screenInches > 6) {  //tablette
+            editSearch.setTextSize(25);
+        }
+
 
         etabList = (ListView) view.findViewById(R.id.listviewRecherche);
 
@@ -86,7 +103,7 @@ public class Recherche2Fragment extends Fragment{
                 String infosStore[][] = new String[nbStores][8];
                 String stores[] = services.getStoresCategorie(nameCategory, infosStore, nbStores);
 
-        /*-----------------Ajout des stores dans la liste-------------------*/
+                /*-----------------Ajout des stores dans la liste-------------------*/
                 for(int i=0; i < nbStores; i++){
                     map = new HashMap<String, String>();
                     if (stores[i].length() >= 25)   //Si le nom de l'établissement est trop long, on tronque et on ajoute "..."
@@ -114,20 +131,21 @@ public class Recherche2Fragment extends Fragment{
                     }
                 });
 
+
                 SimpleAdapter mSchedule;
 
-                //on cherche la résolution de l'écran, pour adapter la vue
-                Display display = getActivity().getWindowManager().getDefaultDisplay();
-                Point size = new Point();
-                display.getSize(size);
-                int width = size.x;
-
-                if (width < 530)
+                if (screenInches <= 5)
                     mSchedule = new SimpleAdapter (getActivity(), etabListItem, R.layout.rowlayoutsmall2,
                             new String[] {"name", "rating", "nbAvis"}, new int[] {R.id.name, R.id.rating, R.id.nbAvis});
-                else
-                    mSchedule = new SimpleAdapter (getActivity(), etabListItem, R.layout.rowlayout2,
-                            new String[] {"name", "rating", "nbAvis"}, new int[] {R.id.name, R.id.rating, R.id.nbAvis});
+                else {
+                    if (screenInches <= 6)
+                        mSchedule = new SimpleAdapter (getActivity(), etabListItem, R.layout.rowlayout2,
+                                new String[] {"name", "rating", "nbAvis"}, new int[] {R.id.name, R.id.rating, R.id.nbAvis});
+                    else    //tablette
+                        mSchedule = new SimpleAdapter (getActivity(), etabListItem, R.layout.rowlayoutlarge2,
+                                new String[] {"name", "rating", "nbAvis"}, new int[] {R.id.name, R.id.rating, R.id.nbAvis});
+                }
+
 
                 etabList.setAdapter(mSchedule);
 
@@ -214,12 +232,12 @@ public class Recherche2Fragment extends Fragment{
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        // TODO Auto-generated method stub
+
                     }
 
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        // TODO Auto-generated method stub
+
                     }
 
                 });

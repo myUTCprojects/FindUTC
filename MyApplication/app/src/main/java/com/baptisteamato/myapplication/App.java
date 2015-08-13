@@ -1,4 +1,4 @@
-package com.example.baptisteamato.findutc;
+package com.baptisteamato.myapplication;
 
 
 import android.app.Application;

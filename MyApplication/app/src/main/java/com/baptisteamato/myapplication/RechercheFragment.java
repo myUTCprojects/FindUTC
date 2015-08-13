@@ -1,14 +1,12 @@
-package com.example.baptisteamato.findutc;
+package com.baptisteamato.myapplication;
 
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.content.pm.ActivityInfo;
 import android.graphics.LightingColorFilter;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,16 +17,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.baptisteamato.findutc.R;
+import com.baptisteamato.myapplication.R;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 
 public class RechercheFragment extends Fragment{
@@ -44,8 +38,6 @@ public class RechercheFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
         container.removeAllViews();
 
         services = new Services(getActivity());
@@ -72,6 +64,10 @@ public class RechercheFragment extends Fragment{
         /*-----------------------------------*/
 
         View view = inflater.inflate(R.layout.fragment_recherche, container, false);
+
+        /*------------------*/
+
+
 
         etabList = (ListView) view.findViewById(R.id.listviewRecherche);
 
@@ -118,8 +114,10 @@ public class RechercheFragment extends Fragment{
                           //on "parse" la catégorie : on remplace les 'ç' par 'c' et les ' ' par '_'
                           String image = categories[i].toLowerCase();
                           image = image.replace("ç", "c");
+                          image = image.replace("é", "e");
                           image = image.replace(" ", "_");
-                          int resourceId = getResources().getIdentifier("ic_" + image, "drawable", "com.example.baptisteamato.myapplication");
+                          image = image.replace("-", "");
+                          int resourceId = getResources().getIdentifier("ic_" + image, "drawable", getResources().getString(R.string.package_name));
                           if (resourceId != 0)    //image trouvée
                               map.put("img", String.valueOf(resourceId));
                           else    //image non trouvée
@@ -131,10 +129,30 @@ public class RechercheFragment extends Fragment{
                   }
 
                   /*------------------------Fin création ListView---------------------------*/
-                  SimpleAdapter mSchedule = new SimpleAdapter(getActivity(), etabListItem, R.layout.rowlayout,
-                          new String[]{"img", "titre", "nbStores"}, new int[]{R.id.img, R.id.titre, R.id.nbStores});
-                  etabList.setAdapter(mSchedule);
 
+                  /*------------*/
+                  DisplayMetrics dm = new DisplayMetrics();
+                  getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+                  int w=dm.widthPixels;
+                  int h=dm.heightPixels;
+                  int dens=dm.densityDpi;
+                  double wi=(double)w/(double)dens;
+                  double hi=(double)h/(double)dens;
+                  double x = Math.pow(wi, 2);
+                  double y = Math.pow(hi,2);
+                  double screenInches = Math.sqrt(x+y);
+                /*------------------*/
+
+                  SimpleAdapter mSchedule;
+
+                  if (screenInches > 6) //tablette
+                    mSchedule = new SimpleAdapter(getActivity(), etabListItem, R.layout.rowlayoutlarge,
+                          new String[]{"img", "titre", "nbStores"}, new int[]{R.id.img, R.id.titre, R.id.nbStores});
+                  else  //smartphone
+                      mSchedule = new SimpleAdapter(getActivity(), etabListItem, R.layout.rowlayout,
+                              new String[]{"img", "titre", "nbStores"}, new int[]{R.id.img, R.id.titre, R.id.nbStores});
+
+                  etabList.setAdapter(mSchedule);
 
                   etabList.setOnItemClickListener(new AdapterView.OnItemClickListener()
 

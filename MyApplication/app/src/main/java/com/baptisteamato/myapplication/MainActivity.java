@@ -1,4 +1,4 @@
-package com.example.baptisteamato.findutc;
+package com.baptisteamato.myapplication;
 
 
 import android.content.pm.ActivityInfo;
@@ -6,13 +6,14 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.baptisteamato.findutc.R;
+import com.baptisteamato.myapplication.R;
 
 
 public class MainActivity extends FragmentActivity {    //Gestionnaire des fragments de l'application

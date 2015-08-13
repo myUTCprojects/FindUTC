@@ -1,19 +1,15 @@
-package com.example.baptisteamato.findutc;
+package com.baptisteamato.myapplication;
 
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
+import android.content.pm.ActivityInfo;
 import android.graphics.LightingColorFilter;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -25,7 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.baptisteamato.findutc.R;
+import com.baptisteamato.myapplication.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -53,7 +49,6 @@ public class CarteFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         services = new Services(getActivity());
 
 
@@ -72,6 +67,7 @@ public class CarteFragment extends Fragment{
         ((ImageView) getActivity().findViewById(R.id.imageRechercher)).setAlpha(128);
 
         ((Button) getActivity().findViewById(R.id.buttonLeft)).setVisibility(View.GONE);
+        ((Button) getActivity().findViewById(R.id.buttonRight)).setVisibility(View.GONE);
         ((ImageView) getActivity().findViewById(R.id.flecheGauche)).setVisibility(View.GONE);
 
 
@@ -79,6 +75,25 @@ public class CarteFragment extends Fragment{
         /*-----------------------------------*/
 
         View view = inflater.inflate(R.layout.fragment_carte, container, false);
+
+         /*------------*/
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int w=dm.widthPixels;
+        int h=dm.heightPixels;
+        int dens=dm.densityDpi;
+        double wi=(double)w/(double)dens;
+        double hi=(double)h/(double)dens;
+        double x = Math.pow(wi,2);
+        double y = Math.pow(hi,2);
+        final double screenInches = Math.sqrt(x+y);
+        /*------------------*/
+
+        if (screenInches > 6) {   //tablette
+            Button button = (Button) view.findViewById(R.id.buttonTous);
+            button.setTextSize(30);
+            button.setHeight(70);
+        }
 
         map = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMap();
 

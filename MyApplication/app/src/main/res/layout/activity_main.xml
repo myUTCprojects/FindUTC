@@ -179,15 +179,6 @@
         android:layout_below="@+id/rlFrag"
         android:background="@color/findUTC"/>
 
-    <!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/fragment_container"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignStart="@+id/rlTitle"
-        android:layout_alignLeft="@+id/rlTitle"
-        android:layout_alignRight="@+id/rlTitle"
-        android:layout_below="@+id/rlTitle"
-        android:layout_above="@+id/linearLayout"/>-->
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -210,8 +201,8 @@
             android:layout_centerInParent="true"
             android:text="Chargement ..."
             android:textSize="20dp"
-            android:textColor="@color/findUTC"
             android:visibility="gone"
+            android:textColor="@color/findUTC"
             android:id="@+id/chargement"/>
 
     </RelativeLayout>
