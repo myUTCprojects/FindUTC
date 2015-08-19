@@ -5,11 +5,18 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
 import com.baptisteamato.myapplication.R;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class Services extends FragmentActivity{
 
@@ -312,4 +319,82 @@ public class Services extends FragmentActivity{
         return rating;
     }
 
+    //renvoie un tableau contenant le nom des établissements favoris
+    public String[] getFavoris() {
+        String res = null;
+        try {
+
+            /*File fileTemp = getActivity().getFileStreamPath(getActivity().getResources().getString(R.string.file_name));
+            fileTemp.delete();*/
+
+            File file = mContext.getFileStreamPath(mContext.getResources().getString(R.string.file_name));
+            if (file.exists()) {
+
+                InputStream inputStream = mContext.openFileInput(mContext.getResources().getString(R.string.file_name));
+
+                if (inputStream != null) {    //si le fichier existe
+                    InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                    String receiveString = "";
+                    StringBuilder stringBuilder = new StringBuilder();
+
+                    while ((receiveString = bufferedReader.readLine()) != null) {
+                        stringBuilder.append(receiveString);
+                    }
+
+                    inputStream.close();
+                    res = stringBuilder.toString();
+                }
+            }
+            else
+                Log.d("vide", "ok");
+        }
+        catch (Exception e) {
+            Log.d("error","ok");
+        }
+        if ((res != null)&&(res != ""))
+            return res.split(";");  //on parse le fichier, contenant les noms des établissements séparés par ';'
+        else
+            return null;
+    }
+
+    //renvoi du nombre de favoris
+    public int getNbFavoris() {
+        String favoris[] = getFavoris();
+        if (favoris == null)
+            return 0;
+        else
+            return favoris.length;
+    }
+
+    //renvoi d'un tableau contenant pour chaque store des favoris : name, rating, idStore, nbOpinions, description, adress, nameCategory, lat et lng
+    public String[][] getInfosFavoris(String listeFavoris[]) {
+        String serverURL = mContext.getResources().getString(R.string.api_stores);
+        serverURL += "?fields=name,nameCategory,rating,idStore,nbOpinions,description,adress,lat,lng";
+        String jsonStr = getData(serverURL);
+        String infos[][] = new String[listeFavoris.length][4];
+        int j = 0;
+        if (jsonStr != null) {
+            try {
+                JSONObject jsonObj = new JSONObject(jsonStr);
+                JSONArray data = jsonObj.getJSONArray("data");
+                for (int i = 0; i < data.length(); i++) {
+                    JSONObject jsonObject = data.getJSONObject(i);
+                    String name = jsonObject.optString("name").toString();
+                    if (Arrays.asList(listeFavoris).contains(name)) {
+                        infos[j][0] = name;
+                        infos[j][1] = jsonObject.optString("rating").toString();
+                        infos[j][2] = jsonObject.optString("idStore").toString();
+                        infos[j][3] = jsonObject.optString("nbOpinions").toString();
+                        j++;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return infos;
+        }
+        else
+            return null;
+    }
 }

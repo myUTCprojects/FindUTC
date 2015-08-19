@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +27,9 @@ public class PageAccueilFragment extends Fragment {     //page de retour s'il y 
         ((ImageView) getActivity().findViewById(R.id.imageMenu)).setAlpha(128);
         ((ImageView) getActivity().findViewById(R.id.imageRechercher)).setAlpha(128);
         ((ImageView) getActivity().findViewById(R.id.imageCarte)).setAlpha(128);
+        ((Button) getActivity().findViewById(R.id.buttonRight)).setVisibility(View.GONE);
+        ((Button) getActivity().findViewById(R.id.buttonLeft)).setVisibility(View.GONE);
+        ((ImageView) getActivity().findViewById(R.id.flecheGauche)).setVisibility(View.GONE);
 
         View view = inflater.inflate(R.layout.fragment_pageaccueil, container, false);
 

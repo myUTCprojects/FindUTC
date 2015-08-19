@@ -57,6 +57,8 @@ public class Recherche2Fragment extends Fragment{
         retour_rechercher.setVisibility(View.VISIBLE);
         ((ImageView) getActivity().findViewById(R.id.flecheGauche)).setVisibility(View.VISIBLE);
 
+        ((Button) getActivity().findViewById(R.id.buttonRight)).setVisibility(View.GONE);
+
         nameCategory = getArguments().getString("nameCategory");
         final String previousCategoryPlural = services.getPlurielCategorie(nameCategory);
 

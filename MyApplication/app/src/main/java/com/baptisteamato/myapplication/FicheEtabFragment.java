@@ -26,11 +26,16 @@ import android.widget.Toast;
 
 import com.baptisteamato.myapplication.R;
 
+import java.io.File;
+import java.io.OutputStreamWriter;
+import java.util.Arrays;
+
 
 public class FicheEtabFragment extends Fragment{
 
     Services services;
     Button buttonRetour;
+    Button buttonAdd;
     String name = "";
     String nameCategory = "";
     String rating = "";
@@ -54,7 +59,6 @@ public class FicheEtabFragment extends Fragment{
     TextView TextDescription;
     LinearLayout ll;
     ImageView phoneIm;
-    TextView chargement;
 
     public FicheEtabFragment(){
     }
@@ -76,7 +80,11 @@ public class FicheEtabFragment extends Fragment{
 
         buttonRetour = (Button) getActivity().findViewById(R.id.buttonLeft);
         buttonRetour.setVisibility(View.VISIBLE);
-        ((Button) getActivity().findViewById(R.id.buttonRight)).setVisibility(View.GONE);
+        //((Button) getActivity().findViewById(R.id.buttonRight)).setVisibility(View.GONE);
+        buttonAdd = (Button) getActivity().findViewById(R.id.buttonRight);
+        buttonAdd.setVisibility(View.VISIBLE);
+        buttonAdd.setText("");
+
         ((ImageView) getActivity().findViewById(R.id.flecheGauche)).setVisibility(View.VISIBLE);
 
         ((TextView) getActivity().findViewById(R.id.title)).setText("Détails");
@@ -155,6 +163,7 @@ public class FicheEtabFragment extends Fragment{
                 final boolean fromCarte = getArguments().getBoolean("fromCarte", false);
                 final boolean fromAvis = getArguments().getBoolean("fromAvis", false);
                 final boolean fromListe = getArguments().getBoolean("fromListe", false);
+                final boolean fromFavoris = getArguments().getBoolean("fromFavoris", false);
 
                 /*------------Récupération des informations de l'établissement-------------*/
                 name = ficheEtab[0];
@@ -170,14 +179,18 @@ public class FicheEtabFragment extends Fragment{
 
                 /*------------Vérification de l'activité d'où l'on vient--------------------*/
 
-                if (fromCarte)  //si l'on vient de la carte
+                if (fromCarte)
                     buttonRetour.setText("Carte");
                 else {
                     if ((fromListe || fromAvis))
                         buttonRetour.setText(previousCategoryPlural);
                     else {
-                        ((Button) getActivity().findViewById(R.id.buttonLeft)).setVisibility(View.GONE);
-                        ((ImageView) getActivity().findViewById(R.id.flecheGauche)).setVisibility(View.GONE);
+                        if (fromFavoris)
+                            buttonRetour.setText("Favoris");
+                        else {
+                            ((Button) getActivity().findViewById(R.id.buttonLeft)).setVisibility(View.GONE);
+                            ((ImageView) getActivity().findViewById(R.id.flecheGauche)).setVisibility(View.GONE);
+                        }
                     }
                 }
 
@@ -195,14 +208,27 @@ public class FicheEtabFragment extends Fragment{
                 TextRating.append(" (" + nbOpinions + " avis)");
                 if (!adresse.equals(""))
                     TextAdresse.setText(adresse);
+                else
+                    TextAdresse.setText("Pas d'adresse disponible.");
                 if (!phone.equals(""))
                     TextPhone.setText(phone);
+                else
+                    TextPhone.setText("Pas de numéro de téléphone disponible.");
                 if (!hours.equals(""))
                     TextHoraires.setText(hours);
                 else
                     ll.setVisibility(View.GONE);
                 if (!description.equals(""))
                     TextDescription.setText(description);
+                else
+                    TextDescription.setText("Pas de description disponible");
+
+                /*Boutton favoris*/
+                final String listeFavoris[] = services.getFavoris();
+                if ((listeFavoris == null)||(!Arrays.asList(listeFavoris).contains(name)))
+                    buttonAdd.setText("+");
+                else
+                    buttonAdd.setText("-");
 
                 /*--------Appui sur le numéro de téléphone : copie du numéro---------*/
 
@@ -260,11 +286,64 @@ public class FicheEtabFragment extends Fragment{
                                 ft.replace(R.id.fragment_container, rechercher2, "Recherche2Fragment");
                                 ft.commit();
                             } else {
-                                MainActivityFragment mainActivityFragment = new MainActivityFragment();
-                                final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                                ft.replace(R.id.fragment_container, mainActivityFragment, "MainActivityFragment");
-                                ft.commit();
+                                if (fromFavoris) {
+                                    Fragment favoris = new FavorisFragment();
+                                    final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                    ft.replace(R.id.fragment_container, favoris, "FavorisFragment");
+                                    ft.commit();
+                                }
+                                else {
+                                    MainActivityFragment mainActivityFragment = new MainActivityFragment();
+                                    final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                    ft.replace(R.id.fragment_container, mainActivityFragment, "MainActivityFragment");
+                                    ft.commit();
+                                }
                             }
+                        }
+                    }
+                });
+
+                buttonAdd.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        if (buttonAdd.getText().equals("+")) {
+                            /*WRITE DATA*/
+                            try {
+                                File file = getActivity().getFileStreamPath(getActivity().getResources().getString(R.string.file_name));
+                                if (file.exists()) {
+                                    OutputStreamWriter outputStreamWriter = new OutputStreamWriter(getActivity().openFileOutput(getActivity().getResources().getString(R.string.file_name), Context.MODE_APPEND));
+                                    outputStreamWriter.append(name + ";");
+                                    outputStreamWriter.close();
+                                } else {
+                                    OutputStreamWriter outputStreamWriter = new OutputStreamWriter(getActivity().openFileOutput(getActivity().getResources().getString(R.string.file_name), Context.MODE_PRIVATE));
+                                    outputStreamWriter.write(name + ";");
+                                    outputStreamWriter.close();
+                                }
+                                Toast.makeText(getActivity(), "Etablissement ajouté aux favoris", Toast.LENGTH_SHORT).show();
+                            } catch (Exception e) {
+                                Toast.makeText(getActivity(), "Une erreur s'est produite. Veuillez réessayer.", Toast.LENGTH_SHORT).show();
+                            }
+                            buttonAdd.setText("-");
+                        }
+                        else {
+                            //DELETE DATA
+                            try {
+                                OutputStreamWriter outputStreamWriterTemp = new OutputStreamWriter(getActivity().openFileOutput(getActivity().getResources().getString(R.string.file_name), Context.MODE_PRIVATE));
+                                outputStreamWriterTemp.write("");
+                                outputStreamWriterTemp.close();
+                                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(getActivity().openFileOutput(getActivity().getResources().getString(R.string.file_name), Context.MODE_APPEND));
+
+                                for (int i=0; i<listeFavoris.length; i++) {
+                                    if (!listeFavoris[i].equals(name))
+                                        outputStreamWriter.append(listeFavoris[i] + ";");
+                                }
+                                outputStreamWriter.close();
+                                Toast.makeText(getActivity(), "Etablissement retiré des favoris", Toast.LENGTH_SHORT).show();
+                            } catch (Exception e) {
+                                Toast.makeText(getActivity(), "Une erreur s'est produite. Veuillez réessayer.", Toast.LENGTH_SHORT).show();
+                            }
+                            buttonAdd.setText("+");
                         }
                     }
                 });
@@ -280,6 +359,8 @@ public class FicheEtabFragment extends Fragment{
                         bundle.putString("previousCategory", previousCategory);
                         bundle.putString("previousCategoryPlural", previousCategoryPlural);
                         bundle.putString("rating", rating);
+                        if (fromFavoris)
+                            bundle.putBoolean("fromFavoris", true);
 
                         Fragment avis = new AvisFragment();
                         avis.setArguments(bundle);
@@ -298,6 +379,8 @@ public class FicheEtabFragment extends Fragment{
                         bundle.putString("idStore", idStore);
                         bundle.putString("previousCategory", previousCategory);
                         bundle.putString("previousCategoryPlural", previousCategoryPlural);
+                        if (fromFavoris)
+                            bundle.putBoolean("fromFavoris", true);
 
                         Fragment addComment = new AddCommentFragment();
                         addComment.setArguments(bundle);

@@ -208,6 +208,8 @@ public class AddCommentFragment extends Fragment {
                     bundle.putString("idStore", idStore);
                     bundle.putString("previousCategory",getArguments().getString("previousCategory"));
                     bundle.putString("previousCategoryPlural",getArguments().getString("previousCategoryPlural"));
+                    if (getArguments().getBoolean("fromFavoris", false) == true)
+                        bundle.putBoolean("fromFavoris", true);
                     FicheEtabFragment ficheEtabFragment = new FicheEtabFragment();
                     ficheEtabFragment.setArguments(bundle);
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();

@@ -149,7 +149,10 @@ public class AvisFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 Bundle bundle=new Bundle();
-                bundle.putBoolean("fromAvis",true);
+                if (getArguments().getBoolean("fromFavoris", false) == true)
+                    bundle.putBoolean("fromFavoris", true);
+                else
+                    bundle.putBoolean("fromAvis",true);
                 bundle.putString("idStore", idStore);
                 bundle.putString("previousCategory", previousCategory);
                 bundle.putString("previousCategoryPlural", previousCategoryPlural);
@@ -175,6 +178,8 @@ public class AvisFragment extends Fragment{
                 bundle.putString("previousCategoryPlural", previousCategoryPlural);
                 bundle.putString("rating", rating);
                 bundle.putString("lastId", idLastOpinion);
+                if (getArguments().getBoolean("fromFavoris", false) == true)
+                    bundle.putBoolean("fromFavoris", true);
 
                 Fragment avis = new AvisFragment();
                 avis.setArguments(bundle);

@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Find\'UTC</string>
     <string name="package_name">com.baptisteamato.myapplication</string>
+    <string name="file_name">favoris.txt</string>
+
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>

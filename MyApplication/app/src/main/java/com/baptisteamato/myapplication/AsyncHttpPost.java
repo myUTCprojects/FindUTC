@@ -39,8 +39,8 @@ public class AsyncHttpPost extends AsyncTask<String,Void,Integer> {
         String url = mContext.getResources().getString(R.string.api_envoi);
         //set connection timeout to 3 seconds
         HttpParams httpParameters = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
-        HttpConnectionParams.setSoTimeout(httpParameters, 3000);
+        HttpConnectionParams.setConnectionTimeout(httpParameters, 5000);
+        HttpConnectionParams.setSoTimeout(httpParameters, 5000);
         //add parameter
         HttpClient httpclient = new DefaultHttpClient(httpParameters);
 

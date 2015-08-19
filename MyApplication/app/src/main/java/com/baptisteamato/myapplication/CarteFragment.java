@@ -253,6 +253,7 @@ public class CarteFragment extends Fragment{
                 }
             }
         }
+
         return view;
     }
 
