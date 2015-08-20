@@ -2,8 +2,10 @@ package com.baptisteamato.myapplication;
 
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -13,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,6 +27,7 @@ import com.baptisteamato.myapplication.R;
 
 public class AddCommentFragment extends Fragment {
 
+    View view;
     Services services;
     String nom_etab_string = "";    //nom de l'établissement : soit obtenu depuis une fiche, soit écrit en EditText (--> déclaré en global)
     String idStore = "0";   //par défaut, si on accède à la rédaction de commentaire depuis le Menu
@@ -67,11 +71,9 @@ public class AddCommentFragment extends Fragment {
         double wi=(double)w/(double)dens;
         double hi=(double)h/(double)dens;
         double x = Math.pow(wi,2);
-        double y = Math.pow(hi,2);
+        double y = Math.pow(hi, 2);
         final double screenInches = Math.sqrt(x+y);
         /*------------------*/
-
-        View view;
 
         if (screenInches > 6) {
             envoyer.setTextSize(23);
@@ -131,6 +133,7 @@ public class AddCommentFragment extends Fragment {
             }
         });
 
+        final int oldColor =  ((TextView) view.findViewById(R.id.titre_nom_etab)).getCurrentTextColor(); //save original color of titles
 
         envoyer.setOnClickListener(new View.OnClickListener() { //envoi de l'avis
             @Override
@@ -164,9 +167,35 @@ public class AddCommentFragment extends Fragment {
                     }
 
                     /*----------------Vérification des saisies--------------*/
-                    if ((nom_etab_string.equals(new String(""))) || (commentaire_string.equals(new String(""))) || (avis_string.equals(new String("Avis"))) || (login_string.equals(new String(""))))
+
+                    if ((nom_etab_string.equals(new String(""))) || (commentaire_string.equals(new String(""))) || (avis_string.equals(new String("Avis"))) || (login_string.equals(new String("")))) {
                         Toast.makeText(getActivity(), "Certains champs n'ont pas été correctement remplis", Toast.LENGTH_SHORT).show();
+                        //modification de la couleur des titres dont le champ n'est pas rempli
+                        if (nom_etab_string.equals(new String("")))
+                            ((TextView) view.findViewById(R.id.titre_nom_etab)).setTextColor(getResources().getColor(R.color.red));
+                        else
+                            ((TextView) view.findViewById(R.id.titre_nom_etab)).setTextColor(oldColor);
+                        if (commentaire_string.equals(new String("")))
+                            ((TextView) view.findViewById(R.id.titre_commentaire)).setTextColor(getResources().getColor(R.color.red));
+                        else
+                            ((TextView) view.findViewById(R.id.titre_commentaire)).setTextColor(oldColor);
+                        if (avis_string.equals(new String("Avis")))
+                            ((TextView) view.findViewById(R.id.titre_avis)).setTextColor(getResources().getColor(R.color.red));
+                        else
+                            ((TextView) view.findViewById(R.id.titre_avis)).setTextColor(oldColor);
+                        if (login_string.equals(new String("")))
+                            ((TextView) view.findViewById(R.id.titre_login)).setTextColor(getResources().getColor(R.color.red));
+                        else
+                            ((TextView) view.findViewById(R.id.titre_login)).setTextColor(oldColor);
+
+                    }
                     else {  //envoi des données
+                        //on remet les titres en couleur de base
+                        ((TextView) view.findViewById(R.id.titre_nom_etab)).setTextColor(oldColor);
+                        ((TextView) view.findViewById(R.id.titre_commentaire)).setTextColor(oldColor);
+                        ((TextView) view.findViewById(R.id.titre_avis)).setTextColor(oldColor);
+                        ((TextView) view.findViewById(R.id.titre_login)).setTextColor(oldColor);
+
                         AsyncHttpPost envoi = new AsyncHttpPost(getActivity());
                         envoi.execute(idStore, nom_etab_string, login_string, rating_string, commentaire_string);
                         int code = 500;     //500 : erreur interne à l'API, 200 : OK
@@ -185,6 +214,7 @@ public class AddCommentFragment extends Fragment {
                                 break;
                             case 400:
                                 Toast.makeText(getActivity(), "Ce login n'existe pas.", Toast.LENGTH_SHORT).show();
+                                ((TextView) view.findViewById(R.id.titre_login)).setTextColor(getResources().getColor(R.color.red));
                                 break;
                             case 401:
                                 Toast.makeText(getActivity(), "Connexion au serveur impossible.", Toast.LENGTH_SHORT).show();
@@ -194,6 +224,7 @@ public class AddCommentFragment extends Fragment {
                                 break;
                             case 0:
                                 Toast.makeText(getActivity(), "Temps de connection trop long. Veuillez réessayer plus tard.", Toast.LENGTH_SHORT).show();
+                                break;
                         }
                     }
                 }

@@ -33,6 +33,7 @@
             android:layout_width="fill_parent"
             android:layout_height="50dp"
             android:text="Commentaire"
+            android:id="@+id/titre_commentaire"
             android:gravity="center_vertical"
             android:textSize="20dp"
             android:background="@color/gris_clair"/>
@@ -51,6 +52,7 @@
             android:layout_width="fill_parent"
             android:layout_height="50dp"
             android:text="Votre avis"
+            android:id="@+id/titre_avis"
             android:gravity="center_vertical"
             android:textSize="20dp"
             android:background="@color/gris_clair"/>
@@ -70,6 +72,7 @@
             android:layout_width="fill_parent"
             android:layout_height="50dp"
             android:text="Login"
+            android:id="@+id/titre_login"
             android:gravity="center_vertical"
             android:textSize="20dp"
             android:background="@color/gris_clair"/>

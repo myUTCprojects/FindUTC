@@ -112,17 +112,18 @@ public class RechercheFragment extends Fragment{
                                       map.put("titre", categories[i]);
                                       map.put("nbStores", "(" + nbStores[i] + ")");
                                       //on récupère l'image correspondante : chaque fichier est de la forme "ic_nameCategorie.png"
-                                      //on "parse" la catégorie : on remplace les 'ç' par 'c' et les ' ' par '_'
+                                      //on "parse" la catégorie : on supprime les accents et on remplace les '-' et ' ' par un underscore ('_')
                                       String image = categories[i].toLowerCase();
                                       image = image.replace("ç", "c");
                                       image = image.replace("é", "e");
+                                      image = image.replace("ê", "e");
                                       image = image.replace(" ", "_");
-                                      image = image.replace("-", "");
+                                      image = image.replace("-", "_");
                                       int resourceId = getResources().getIdentifier("ic_" + image, "drawable", getResources().getString(R.string.package_name));
                                       if (resourceId != 0)    //image trouvée
                                           map.put("img", String.valueOf(resourceId));
                                       else    //image non trouvée
-                                          map.put("img", String.valueOf(R.drawable.ic_tous));
+                                          map.put("img", String.valueOf(R.drawable.ic_autre));
                                       etabListItem.add(map);
                                   }
 

@@ -12,11 +12,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.ClipboardManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -33,6 +35,7 @@ import java.util.Arrays;
 
 public class FicheEtabFragment extends Fragment{
 
+    View view;
     Services services;
     Button buttonRetour;
     Button buttonAdd;
@@ -80,7 +83,6 @@ public class FicheEtabFragment extends Fragment{
 
         buttonRetour = (Button) getActivity().findViewById(R.id.buttonLeft);
         buttonRetour.setVisibility(View.VISIBLE);
-        //((Button) getActivity().findViewById(R.id.buttonRight)).setVisibility(View.GONE);
         buttonAdd = (Button) getActivity().findViewById(R.id.buttonRight);
         buttonAdd.setVisibility(View.VISIBLE);
         buttonAdd.setText("");
@@ -91,23 +93,6 @@ public class FicheEtabFragment extends Fragment{
 
         //on affiche les onglets
         ((LinearLayout) getActivity().findViewById(R.id.linearLayout)).setVisibility(View.VISIBLE);
-        /*-----------------------*/
-
-        //Si le Keyboard était ouvert dans Recherche2Fragment (pour l'EditText), on le ferme
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm.isAcceptingText()) { //Keyboard was shown
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0); //Keyboard closed
-        }
-
-        /*-----------------------*/
-
-        //on cherche la résolution de l'écran, pour adapter la vue
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int height = size.y;
-
-        View view;
 
         /*------------*/
         DisplayMetrics dm = new DisplayMetrics();
@@ -134,7 +119,6 @@ public class FicheEtabFragment extends Fragment{
                     view = inflater.inflate(R.layout.fragment_large_ficheetab, container, false);
             }
         }
-
 
         /*-----------find Views-------------*/
         buttonVoirAvis = (Button) view.findViewById(R.id.voir_avis);
